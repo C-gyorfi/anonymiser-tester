@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-logs db-shell db-reset setup run-server migrate make-migrations
+.PHONY: db-up db-down db-logs db-shell db-reset db-schema-dump setup run-server migrate make-migrations create-superuser
 
 DB_NAME=anonymiser-tester-db
 DB_USER=testuser
@@ -27,6 +27,9 @@ db-shell:
 
 db-reset: db-down db-up
 
+db-schema-dump:
+	docker exec $(DB_CONTAINER) pg_dump -U $(DB_USER) -d $(DB_NAME) --schema-only --no-owner --no-privileges -T 'auth_*' -T 'django_*' > schema.sql
+
 setup: db-up
 	poetry install
 
@@ -38,3 +41,9 @@ migrate:
 
 make-migrations:
 	poetry run python manage.py makemigrations
+
+create-superuser:
+	DJANGO_SUPERUSER_USERNAME=admin \
+	DJANGO_SUPERUSER_PASSWORD=securepass \
+	DJANGO_SUPERUSER_EMAIL=admin@example.com \
+	poetry run python manage.py createsuperuser --noinput
