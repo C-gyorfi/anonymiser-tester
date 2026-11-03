@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-logs db-shell db-reset
+.PHONY: db-up db-down db-logs db-shell db-reset runserver migrate makemigrations
 
 DB_NAME=anonymiser-tester-db
 DB_USER=testuser
@@ -26,3 +26,12 @@ db-shell:
 	docker exec -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME)
 
 db-reset: db-down db-up
+
+run-server:
+	poetry run python manage.py runserver
+
+migrate:
+	poetry run python manage.py migrate
+
+make-migrations:
+	poetry run python manage.py makemigrations
