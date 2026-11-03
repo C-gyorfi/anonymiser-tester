@@ -1,0 +1,41 @@
+# Byte-compiled / cache
+__pycache__/
+
+# Django
+db.sqlite3
+*.log
+media/
+staticfiles/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Poetry
+poetry.toml
+
+# Environment variables
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Testing
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+
+# Local database dumps
+*.sql
+*.dump
+
+# Docker
+docker-data/
