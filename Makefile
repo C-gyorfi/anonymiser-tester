@@ -13,7 +13,7 @@ db-up:
 		-e POSTGRES_USER=$(DB_USER) \
 		-e POSTGRES_PASSWORD=$(DB_PASSWORD) \
 		-p $(DB_PORT):5432 \
-		postgres:17
+		pgvector/pgvector:pg18
 
 db-down:
 	docker stop $(DB_CONTAINER) || true
