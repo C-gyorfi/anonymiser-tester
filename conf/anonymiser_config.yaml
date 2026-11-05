@@ -1,0 +1,21 @@
+config:
+  addons: # Tese are Python packages where the sanitizer will be looking for sanitizer functions
+    - django_db_anonymiser.db_anonymiser
+    - my_custom_sanitiser # This is folder that has custom sanitizers defined
+  extra_parameters: # These parameters will be passed to the dump tool CLI
+    pg_dump:
+        - "--exclude-table-data=document_data_documentdata"
+
+strategy: # Sanitization strategy -> tables and columns with sanitiser function
+  customer:
+    first_name: faker.first_name
+    last_name: faker.last_name
+    email: faker.email
+    phone_number: faker.phone_number
+  address:
+    address: dummies.my_dummy_value # custom sanitiser where dummies is the filename and calling a function sanitize_my_dummy_value(value) -> has to define 1 positional argument, even if original value is not used
+    address2: dummies.my_dummy_value
+    district: dummies.my_dummy_value
+    city_id: dummies.my_dummy_value
+    postal_code: dummies.my_dummy_value
+    phone: dummies.my_dummy_value
