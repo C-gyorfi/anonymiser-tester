@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_db_anonymiser.db_anonymiser',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +130,10 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+DB_ANONYMISER_CONFIG_LOCATION = Path(BASE_DIR) / "conf" / "anonymiser_config.yaml"
+DB_ANONYMISER_AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+DB_ANONYMISER_AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+DB_ANONYMISER_AWS_REGION = "eu-west-2"
+DB_ANONYMISER_AWS_STORAGE_BUCKET_NAME = ""
+DB_ANONYMISER_DUMP_FILE_NAME = "testproject-db-dump"
