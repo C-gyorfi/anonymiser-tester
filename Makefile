@@ -1,10 +1,14 @@
-.PHONY: db-up db-down db-logs db-shell db-reset db-schema-dump setup run-server migrate make-migrations create-superuser
+.PHONY: db-up db-down db-logs db-shell db-reset anon-up anon-down db-schema-dump setup run-server migrate make-migrations create-superuser
 
 DB_NAME=anonymiser-tester-db
 DB_USER=testuser
 DB_PASSWORD=testpass
 DB_CONTAINER=anonymiser-tester
 DB_PORT=5432
+
+ANON_CONTAINER=anonymiser-tester-anon
+ANON_PORT=5433
+ANON_IMAGE=registry.gitlab.com/dalibo/postgresql_anonymizer:latest
 
 db-up:
 	docker run -d \
@@ -26,6 +30,20 @@ db-shell:
 	docker exec -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME)
 
 db-reset: db-down db-up
+
+anon-up:
+	docker run -d \
+		--platform linux/amd64 \
+		--name $(ANON_CONTAINER) \
+		-e POSTGRES_DB=$(DB_NAME) \
+		-e POSTGRES_USER=$(DB_USER) \
+		-e POSTGRES_PASSWORD=$(DB_PASSWORD) \
+		-p $(ANON_PORT):5432 \
+		$(ANON_IMAGE)
+
+anon-down:
+	docker stop $(ANON_CONTAINER) || true
+	docker rm $(ANON_CONTAINER) || true
 
 db-schema-dump:
 	docker exec $(DB_CONTAINER) pg_dump -U $(DB_USER) -d $(DB_NAME) --schema-only --no-owner --no-privileges -T 'auth_*' -T 'django_*' > schema.sql
