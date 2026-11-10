@@ -40,3 +40,6 @@ dist/
 # Docker
 docker-data/
 final_report_example.md
+
+# Masking rules are config, keep them in git
+!anon/*.sql
