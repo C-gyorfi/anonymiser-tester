@@ -1,0 +1,42 @@
+common:
+  pg_bin_path: "/usr/bin/"
+  tmp_dir: "/tmp"
+
+log:
+  level: "info"
+  format: "text"
+
+storage:
+  directory:
+    path: "/tmp/dumps"   # inside the container; only dump.sql is written to the host
+
+dump:
+  pg_dump_options:
+    # connection details come from the Makefile (DB_HOST, DB_PORT, DB_USER, DB_NAME)
+    dbname: "host=${DB_HOST} port=${DB_PORT} user=${DB_USER} dbname=${DB_NAME}"
+
+  transformation:
+    - schema: "public"
+      name: "customer"
+      transformers:
+        # built-in: random first name (random engine, new value on every run)
+        - name: "RandomPerson"
+          params:
+            columns:
+              - name: "first_name"
+                template: "{{ .FirstName }}"
+
+        # custom: our own script returns a fake string
+        - name: "Cmd"
+          params:
+            columns:
+              - name: "last_name"
+                skip_original_data: true
+            executable: "/spike/fake_last_name.sh"
+            driver:
+              name: "text"
+
+        # built-in: random email
+        - name: "RandomEmail"
+          params:
+            column: "email"
